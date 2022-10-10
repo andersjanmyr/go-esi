@@ -1,12 +1,10 @@
 package esi
 
-import (
-	"net/http"
-)
+import "github.com/fastly/compute-sdk-go/fsthttp"
 
 type (
 	tag interface {
-		process([]byte, *http.Request) ([]byte, int)
+		process([]byte, *fsthttp.Request) ([]byte, int)
 	}
 
 	baseTag struct {
@@ -18,6 +16,6 @@ func newBaseTag() *baseTag {
 	return &baseTag{length: 0}
 }
 
-func (b *baseTag) process(content []byte, _ *http.Request) ([]byte, int) {
+func (b *baseTag) process(content []byte, _ *fsthttp.Request) ([]byte, int) {
 	return []byte{}, len(content)
 }

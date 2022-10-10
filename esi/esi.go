@@ -1,8 +1,6 @@
 package esi
 
-import (
-	"net/http"
-)
+import "github.com/fastly/compute-sdk-go/fsthttp"
 
 func findTagName(b []byte) tag {
 	name := tagname.FindSubmatch(b)
@@ -43,7 +41,7 @@ func findTagName(b []byte) tag {
 	return nil
 }
 
-func Parse(b []byte, req *http.Request) []byte {
+func Parse(b []byte, req *fsthttp.Request) []byte {
 	pointer := 0
 
 	for pointer < len(b) {

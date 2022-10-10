@@ -1,8 +1,9 @@
 package esi
 
 import (
-	"net/http"
 	"regexp"
+
+	"github.com/fastly/compute-sdk-go/fsthttp"
 )
 
 const comment = "comment"
@@ -14,7 +15,7 @@ type commentTag struct {
 }
 
 // Input (e.g. comment text="This is a comment." />).
-func (c *commentTag) process(b []byte, req *http.Request) ([]byte, int) {
+func (c *commentTag) process(b []byte, req *fsthttp.Request) ([]byte, int) {
 	found := closeComment.FindIndex(b)
 	if found == nil {
 		return nil, len(b)

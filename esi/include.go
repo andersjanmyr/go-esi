@@ -1,9 +1,11 @@
 package esi
 
 import (
+	"context"
 	"io"
-	"net/http"
 	"regexp"
+
+	"github.com/fastly/compute-sdk-go/fsthttp"
 )
 
 const include = "include"
@@ -40,7 +42,7 @@ func (i *includeTag) loadAttributes(b []byte) error {
 // With or without the alt
 // With or without a space separator before the closing
 // With or without the quotes around the src/alt value.
-func (i *includeTag) process(b []byte, req *http.Request) ([]byte, int) {
+func (i *includeTag) process(b []byte, req *fsthttp.Request) ([]byte, int) {
 	closeIdx := closeInclude.FindIndex(b)
 
 	if closeIdx == nil {
@@ -52,13 +54,12 @@ func (i *includeTag) process(b []byte, req *http.Request) ([]byte, int) {
 		return nil, len(b)
 	}
 
-	rq, _ := http.NewRequest(http.MethodGet, i.src, nil)
-	client := &http.Client{}
-	response, err := client.Do(rq)
+	rq, _ := fsthttp.NewRequest(fsthttp.MethodGet, i.src, nil)
+	response, err := rq.Send(context.TODO(), "todo")
 
 	if err != nil || response.StatusCode >= 400 {
-		rq, _ = http.NewRequest(http.MethodGet, i.src, nil)
-		response, err = client.Do(rq)
+		rq, _ = fsthttp.NewRequest(fsthttp.MethodGet, i.src, nil)
+		response, err := rq.Send(context.TODO(), "todo")
 
 		if err != nil || response.StatusCode >= 400 {
 			return nil, len(b)

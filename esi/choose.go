@@ -1,8 +1,9 @@
 package esi
 
 import (
-	"net/http"
 	"regexp"
+
+	"github.com/fastly/compute-sdk-go/fsthttp"
 )
 
 const choose = "choose"
@@ -30,7 +31,7 @@ type chooseTag struct {
 //   </esi:otherwise>
 // </esi:choose>
 // ).
-func (c *chooseTag) process(b []byte, req *http.Request) ([]byte, int) {
+func (c *chooseTag) process(b []byte, req *fsthttp.Request) ([]byte, int) {
 	found := closeChoose.FindIndex(b)
 	if found == nil {
 		return nil, len(b)

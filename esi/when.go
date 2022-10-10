@@ -1,9 +1,10 @@
 package esi
 
 import (
-	"net/http"
 	"regexp"
 	"strings"
+
+	"github.com/fastly/compute-sdk-go/fsthttp"
 )
 
 var (
@@ -13,7 +14,7 @@ var (
 	logicalOr     = regexp.MustCompile(`\((.+?)\)\|\((.+?)\)`)
 )
 
-func validateTest(b []byte, req *http.Request) bool {
+func validateTest(b []byte, req *fsthttp.Request) bool {
 	if r := unaryNegation.FindSubmatch(b); r != nil {
 		return !validateTest(r[1], req)
 	} else if r := logicalAnd.FindSubmatch(b); r != nil {

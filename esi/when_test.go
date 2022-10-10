@@ -1,9 +1,9 @@
 package esi
 
 import (
-	"net/http"
-	"net/http/httptest"
 	"testing"
+
+	"github.com/fastly/compute-sdk-go/fsthttp"
 )
 
 var (
@@ -17,23 +17,23 @@ var (
 func Test_validateTest(t *testing.T) {
 	t.Parallel()
 
-	if validateTest(unaryNegationTest, httptest.NewRequest(http.MethodGet, "http://domain.com", nil)) {
+	if validateTest(unaryNegationTest, newRequest(fsthttp.MethodGet, "http://domain.com", nil)) {
 		t.Error("The unaryNegationTest must return false because we return the opposite of true (1==1)")
 	}
 
-	if validateTest(comparisonTest, httptest.NewRequest(http.MethodGet, "http://domain.com", nil)) {
+	if validateTest(comparisonTest, newRequest(fsthttp.MethodGet, "http://domain.com", nil)) {
 		t.Error("The comparisonTest must return false because we return the opposite of true (a < c)")
 	}
 
-	if !validateTest(logicalOrTest, httptest.NewRequest(http.MethodGet, "http://domain.com", nil)) {
+	if !validateTest(logicalOrTest, newRequest(fsthttp.MethodGet, "http://domain.com", nil)) {
 		t.Error("The logicalOrTest must return true because we return true or false (1==1)|('abc'=='def')")
 	}
 
-	if validateTest(logicalAndTest, httptest.NewRequest(http.MethodGet, "http://domain.com", nil)) {
+	if validateTest(logicalAndTest, newRequest(fsthttp.MethodGet, "http://domain.com", nil)) {
 		t.Error("The logicalAndTest must return false because we return true and false (4!=5)&(4==5)")
 	}
 
-	rq := httptest.NewRequest(http.MethodGet, "http://domain.com", nil)
+	rq := newRequest(fsthttp.MethodGet, "http://domain.com", nil)
 	rq.Header.Add("Accept-Language", "en-gb")
 	rq.Header.Add("Accept-Language", "fr-fr")
 

@@ -1,9 +1,10 @@
 package esi
 
 import (
-	"net/http"
 	"regexp"
 	"strings"
+
+	"github.com/fastly/compute-sdk-go/fsthttp"
 )
 
 const (
@@ -25,7 +26,7 @@ var (
 	closeVars = regexp.MustCompile("</esi:vars>")
 )
 
-func parseVariables(b []byte, req *http.Request) string {
+func parseVariables(b []byte, req *fsthttp.Request) string {
 	interprets := interpretedVar.FindSubmatch(b)
 
 	if interprets != nil {
@@ -41,9 +42,9 @@ func parseVariables(b []byte, req *http.Request) string {
 		case httpHost:
 			return req.Host
 		case httpReferrer:
-			return req.Referer()
+			return req.Header.Get("referer")
 		case httpUserAgent:
-			return req.UserAgent()
+			return req.Header.Get("user-agent")
 		case httpQueryString:
 			if q := req.URL.Query().Get(string(interprets[3])); q != "" {
 				return q
@@ -75,7 +76,7 @@ type varsTag struct {
 }
 
 // Input (e.g. comment text="This is a comment." />).
-func (c *varsTag) process(b []byte, req *http.Request) ([]byte, int) {
+func (c *varsTag) process(b []byte, req *fsthttp.Request) ([]byte, int) {
 	found := closeVars.FindIndex(b)
 	if found == nil {
 		return nil, len(b)
