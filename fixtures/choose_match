@@ -1,0 +1,5 @@
+<esi:choose>
+  <esi:when test="($(QUERY_STRING{'request-path'}) matches '''\/se\/sv\/this-is-ikea*''') | ($(QUERY_STRING{'request-path'}) matches '''\/se\/sv\/visit-ikea*''')">
+    <link rel="stylesheet" href="https://www.cte.ikeadt.com/se/sv/local-extensions/header-footer/styles/csc-recruitment.d8bd15c93dc3abf42ba802e6.css" />
+  </esi:when>
+</esi:choose>

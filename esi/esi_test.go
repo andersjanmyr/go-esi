@@ -59,3 +59,8 @@ func Test_Parse_fullMock(t *testing.T) {
 	t.Parallel()
 	fmt.Println(string(Parse(loadFromFixtures("full.html"), newRequest(fsthttp.MethodGet, "/", nil))))
 }
+
+func Test_Parse_choose_match(t *testing.T) {
+	t.Parallel()
+	fmt.Println(string(Parse(loadFromFixtures("choose_match"), newRequest(fsthttp.MethodGet, "/se/sv/this-is-ikea/", nil))))
+}
